@@ -1,17 +1,17 @@
 <template>
   <div id="app">
+    <m-header></m-header>
     hey jude!
   </div>
 </template>
 
 <script>
+import MHeader from 'components/m-header/m-header'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    MHeader
+  }
 }
 </script>
-
-<style lang="stylus">
-  @import "~common/stylus/index.styl"
-  #app
-   color: $color-theme
-</style>
