@@ -1,5 +1,6 @@
 'use strict'
 const utils = require('./utils')
+const apiServer = require('./api.server')
 const webpack = require('webpack')
 const config = require('../config')
 const merge = require('webpack-merge')
@@ -69,7 +70,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 })
 
 module.exports = new Promise((resolve, reject) => {
-  portfinder.basePort = process.env.PORT || config.dev.port
+  portfinder.basePort = process.env.PORT || config.dev.port  
   portfinder.getPort((err, port) => {
     if (err) {
       reject(err)
@@ -82,7 +83,8 @@ module.exports = new Promise((resolve, reject) => {
       // Add FriendlyErrorsPlugin
       devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
         compilationSuccessInfo: {
-          messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
+          // messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
+          messages: [`Your application is running here: http://localhost:${port}`],
         },
         onErrors: config.dev.notifyOnErrors
         ? utils.createNotifierCallback()
@@ -92,4 +94,15 @@ module.exports = new Promise((resolve, reject) => {
       resolve(devWebpackConfig)
     }
   })
+  // portfinder.getPort((err, apiPort) => {
+  //   portfinder.apiPort = process.env.APIPORT || config.dev.apiPort
+  //   if (err) {
+  //     reject(err)
+  //   } else {
+  //     const apiPort = portfinder.apiPort
+  //     // publish the new Port, necessary for e2e tests
+  //     process.env.APIPORT = apiPort
+  //     resolve(apiServer.listen(apiPort))
+  //   }
+  // })
 })

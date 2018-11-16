@@ -4,17 +4,22 @@
 
 const path = require('path')
 
-module.exports = {
+const config = {
   dev: {
 
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/api': {
+        target: `http://localhost:3000/`
+      }
+    },
 
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    apiPort: 3000, // api代理端口
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
@@ -74,3 +79,5 @@ module.exports = {
     bundleAnalyzerReport: process.env.npm_config_report
   }
 }
+
+module.exports = config

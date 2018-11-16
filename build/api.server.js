@@ -1,0 +1,52 @@
+'use strict'
+
+const express = require('express')
+const app = express()
+const routers = express.Router()
+const axios = require('axios')
+const { apiPort, host } = require('../config/index').dev
+
+// 代理 get: /getDiscList 请求
+routers.get('/getDiscList', (req, res) => {
+  const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+
+  axios.get(url, {
+    headers: {
+      referer: 'https://c.y.qq.com/',
+      host: 'c.y.qq.com'
+    },
+    params: req.query
+  }).then(response => {
+    res.json(response.data)
+  }).catch(e => {
+    console.error(e)
+  })
+
+})
+
+app.use('/api', routers)
+
+// 导出对象
+app.exports = app => {
+  module.exports = app
+}
+
+// 监听端口
+app.listenPort = (port, host) => {
+  app.listen(port, host, err => {
+    if (err) {
+      console.error(err)
+    }
+    console.log(`Example app listening on port http://localhost:${port}!`)
+  })
+}
+
+if (module.parent) {
+  // console.log('apiServer被require')
+  // 导出app对象，外部listen端口
+  app.exports(app)
+} else {
+  // console.log('apiServer没有require')
+  // 没有require，那就自己监听一个端口
+  app.listenPort(apiPort, host)
+}

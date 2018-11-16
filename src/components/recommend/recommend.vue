@@ -13,13 +13,14 @@
 </template>
 
 <script>
-import { getRecommend } from 'api/recommend'
+import { getRecommend, getDiscLikst } from 'api/recommend'
 import { ERR_OK } from 'api/config'
 import Slider from 'base/slider/slider.vue'
 
 export default {
   created() {
     this._getRecommend()
+    this._getDiscLikst()
   },
   data() {
     return {
@@ -31,6 +32,13 @@ export default {
       getRecommend().then(res => {
         if (res.code === ERR_OK) {
           this.recommends = res.data.slider
+        }
+      })
+    },
+    _getDiscLikst() {
+      getDiscLikst().then(res => {
+        if (res.code === ERR_OK) {
+          console.log(res.data)
         }
       })
     }
