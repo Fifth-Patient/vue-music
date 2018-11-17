@@ -119,9 +119,10 @@ export default {
 <style lang="stylus" scoped>
 @import '~common/stylus/variable'
 .slider
+  position: relative
   min-height: 1px
+  overflow: hidden
   .slider-group
-    position: relative
     overflow: hidden
     white-space: nowrap
     .slider-item
