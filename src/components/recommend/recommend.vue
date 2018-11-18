@@ -1,6 +1,6 @@
 <template>
   <div class="recommend">
-    <scroll class="recommend-content" :data="discLikst">
+    <scroll class="recommend-content" :data="discLikst" ref="scroll">
       <div>
         <div v-if="recommends.length" class="slider-wrapper">
           <slider>
@@ -44,7 +44,8 @@ export default {
   data() {
     return {
       recommends: [],
-      discLikst: []
+      discLikst: [],
+      checkLoaded: false
     }
   },
   methods: {
@@ -61,6 +62,12 @@ export default {
           this.discLikst = res.data.list
         }
       })
+    },
+    loadImage() {
+      if (!this.checkLoaded) {
+        this.$refs.scroll.refresh()
+        this.checkLoaded = true
+      }
     }
   },
   components: {
