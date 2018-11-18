@@ -57,6 +57,7 @@ export default {
       this.slider = new BScroll(this.$refs.slider, {
         scrollX: true,
         scrollY: true,
+        click: true,
         momentum: false,
         snap: true,
         snapLoop: this.loop,
