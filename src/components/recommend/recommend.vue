@@ -1,35 +1,40 @@
 <template>
   <div class="recommend">
-    <div v-if="recommends.length">
-      <slider>
-        <div v-for="item in recommends" :key="item.index">
-          <a :href="item.linkUrl">
-            <img :src="item.picUrl">
-          </a>
+    <scroll class="recommend-content" :data="discLikst">
+      <div>
+        <div v-if="recommends.length" class="slider-wrapper">
+          <slider>
+            <div v-for="item in recommends" :key="item.index">
+              <a :href="item.linkUrl">
+                <img :src="item.picUrl">
+              </a>
+            </div>
+          </slider>
         </div>
-      </slider>
-    </div>
-    <div class="recommend-list">
-      <h1 class="list-title">热门歌单推荐</h1>
-      <ul>
-        <li v-for="(item, index) in discLikst" :key="index" class="item">
-          <div class="icon">
-            <img width="60" height="60" :src="item.imgurl">
-          </div>
-          <div class="text">
-            <h2 class="name" v-html="item.creator.name"></h2>
-            <p class="desc" v-html="item.dissname"></p>
-          </div>
-        </li>
-      </ul>
-    </div>
+        <div class="recommend-list">
+          <h1 class="list-title">热门歌单推荐</h1>
+          <ul>
+            <li v-for="(item, index) in discLikst" :key="index" class="item">
+              <div class="icon">
+                <img width="60" height="60" :src="item.imgurl">
+              </div>
+              <div class="text">
+                <h2 class="name" v-html="item.creator.name"></h2>
+                <p class="desc" v-html="item.dissname"></p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </scroll>
   </div>
 </template>
 
 <script>
+import Slider from 'base/slider/slider.vue'
+import Scroll from 'base/scroll/scroll.vue'
 import { getRecommend, getDiscLikst } from 'api/recommend'
 import { ERR_OK } from 'api/config'
-import Slider from 'base/slider/slider.vue'
 
 export default {
   created() {
@@ -59,38 +64,51 @@ export default {
     }
   },
   components: {
-    Slider
+    Slider,
+    Scroll
   }
 }
 </script>
 
 <style lang="stylus" scoped>
 @import '~common/stylus/variable'
-.recommend-list
-  .list-title
-    height: 65px
-    line-height: 65px
-    text-align: center
-    font-size: $font-size-medium
-    color: $color-theme
-  .item
-    display: flex
-    box-sizing: border-box
-    align-items: center
-    padding: 0 20px 20px 20px
-    .icon
-      flex: 0 0 60px
-      width: 60px
-      padding-right: 20px
-    .text
-      display: flex
-      flex-direction: column
-      justify-content: center
-      line-height: 20px
+.recommend
+  position: fixed
+  width: 100%
+  top: 88px
+  bottom: 0
+  .recommend-content
+    height: 100%
+    overflow: hidden
+    .slider-wrapper
+      position: relative
+      width: 100%
       overflow: hidden
-      font-size: $font-size-medium
-      .name
-        margin-bottom: 10px
-      .desc
-        color: $color-text-d
+    .recommend-list
+      .list-title
+        height: 65px
+        line-height: 65px
+        text-align: center
+        font-size: $font-size-medium
+        color: $color-theme
+      .item
+        display: flex
+        box-sizing: border-box
+        align-items: center
+        padding: 0 20px 20px 20px
+        .icon
+          flex: 0 0 60px
+          width: 60px
+          padding-right: 20px
+        .text
+          display: flex
+          flex-direction: column
+          justify-content: center
+          line-height: 20px
+          overflow: hidden
+          font-size: $font-size-medium
+          .name
+            margin-bottom: 10px
+          .desc
+            color: $color-text-d
 </style>
