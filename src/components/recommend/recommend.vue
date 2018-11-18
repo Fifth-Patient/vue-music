@@ -26,6 +26,9 @@
           </ul>
         </div>
       </div>
+      <div class="loading-container" v-show="!discLikst.length">
+        <loading></loading>
+      </div>
     </scroll>
   </div>
 </template>
@@ -33,6 +36,7 @@
 <script>
 import Slider from 'base/slider/slider.vue'
 import Scroll from 'base/scroll/scroll.vue'
+import Loading from 'base/loading/loading.vue'
 import { getRecommend, getDiscLikst } from 'api/recommend'
 import { ERR_OK } from 'api/config'
 
@@ -72,7 +76,8 @@ export default {
   },
   components: {
     Slider,
-    Scroll
+    Scroll,
+    Loading
   }
 }
 </script>
@@ -118,4 +123,9 @@ export default {
             margin-bottom: 10px
           .desc
             color: $color-text-d
+  .loading-container
+    position: absolute
+    width: 100%
+    top: 50%
+    transform: translateY(50%)
 </style>
