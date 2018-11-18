@@ -6,7 +6,7 @@
           <slider>
             <div v-for="item in recommends" :key="item.index">
               <a :href="item.linkUrl">
-                <img :src="item.picUrl" @load="loadImage">
+                <img class="needsClick" :src="item.picUrl" @load="loadImage">
               </a>
             </div>
           </slider>
