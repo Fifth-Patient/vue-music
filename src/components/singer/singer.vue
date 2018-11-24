@@ -10,6 +10,7 @@ import { ERR_OK } from 'api/config'
 import { getSingerList } from 'api/singer'
 import Singer from 'common/js/singer'
 import ListView from 'base/listview/listview'
+import { mapMutations } from 'vuex'
 
 const HOT_NAME = '热门'
 const HOT_SINGER_LENGTH = 10
@@ -24,6 +25,9 @@ export default {
     this._getSingerList()
   },
   methods: {
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    }),
     _getSingerList() {
       getSingerList().then(res => {
         if (res.code === ERR_OK) {
@@ -76,6 +80,7 @@ export default {
       this.$router.push({
         path: `/singer/${singer.id}`
       })
+      this.setSinger(singer)
     }
   },
   components: {
