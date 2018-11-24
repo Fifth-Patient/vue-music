@@ -7,10 +7,26 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import { ERR_OK } from 'api/config'
+import { getSingerDetail } from 'api/singer'
 export default {
+  created() {
+    this._getSingerDetail()
+  },
   computed: {
     ...mapGetters(['singer'])
+  },
+  methods: {
+    _getSingerDetail() {
+      if (!this.singer.id) {
+        this.$router.push('/singer')
+      }
+      getSingerDetail(this.singer.id).then(res => {
+        if (res.code === ERR_OK) {
+          console.log(res.data.list)
+        }
+      })
+    }
   }
 }
 </script>
