@@ -16,7 +16,10 @@
     <div class="bg-layer" ref="layer"></div>
     <scroll :data="songs" :probe-type="probeType" :listenScroll="listenScroll" @scroll="scroll" class="list" ref="list">
       <div class="song-list-wrapper">
-      <song-list :songs="songs"></song-list>
+        <song-list :songs="songs"></song-list>
+      </div>
+      <div v-show="!songs.length" class="loading-container">
+        <loading></loading>
       </div>
     </scroll>
   </div>
@@ -25,6 +28,7 @@
 <script>
 import Scroll from 'base/scroll/scroll'
 import songList from 'base/song-list/song-list'
+import loading from 'base/loading/loading'
 import { prefixStyle } from 'common/js/dom'
 
 const RESERVED_HEIGHT = 40
@@ -101,7 +105,8 @@ export default {
   },
   components: {
     Scroll,
-    songList
+    songList,
+    loading
   }
 }
 </script>
