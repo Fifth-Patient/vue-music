@@ -17,8 +17,11 @@
 <script>
 import Scroll from 'base/scroll/scroll'
 import songList from 'base/song-list/song-list'
+import { prefixStyle } from 'common/js/dom'
 
 const RESERVED_HEIGHT = 40
+const transform = prefixStyle('transform')
+const backdrop = prefixStyle('backdrop')
 
 export default {
   props: {
@@ -57,8 +60,7 @@ export default {
       let scale = 1
       let blur = 0
       const percent = Math.abs(newY / this.imageHeight)
-      this.$refs.layer.style['transform'] = `translate3d(0, ${translateY}px, 0)`
-      this.$refs.layer.style['webkitTransform'] = `translate3d(0, ${translateY}px, 0)`
+      this.$refs.layer.style[transform] = `translate3d(0, ${translateY}px, 0)`
       if (newY < this.mixTranslateY) {
         zIndex = 10
         this.$refs.bgImage.style.paddingTop = 0
@@ -70,13 +72,11 @@ export default {
       if (newY > 0) {
         scale = 1 + percent
         zIndex = 10
-        this.$refs.bgImage.style['transform'] = `scale(${scale})`
-        this.$refs.bgImage.style['webkitTransform'] = `scale(${scale})`
+        this.$refs.bgImage.style[transform] = `scale(${scale})`
       } else {
         blur = Math.min(20, 20 * percent)
       }
-      this.$refs.filter.style['backdrop'] = `blur(${blur}px)`
-      this.$refs.filter.style['webkitBackdrop'] = `blur(${blur}px)`
+      this.$refs.filter.style[backdrop] = `blur(${blur}px)`
       this.$refs.bgImage.style.zIndex = zIndex
     }
   },
