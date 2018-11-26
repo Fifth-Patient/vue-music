@@ -8,6 +8,7 @@
 import { mapGetters } from 'vuex'
 import { ERR_OK } from 'api/config'
 import { getSingerDetail } from 'api/singer'
+import { getSongVkey } from 'api/song'
 import { createSong } from 'common/js/song'
 import musicList from 'components/music-list/music-list'
 
@@ -43,11 +44,14 @@ export default {
     },
     _normaiizeSongs(list) {
       let ret = []
-      list.forEach(item => {
+      list.forEach((item, index) => {
         let { musicData } = item
-        if (musicData.songid && musicData.albumid) {
-          ret.push(createSong(musicData))
-        }
+        getSongVkey(musicData.songmid).then(res => {
+          let vkey = res.data.items[0].vkey
+          if (musicData.songid && musicData.albumid) {
+            ret.push(createSong(musicData, vkey))
+          }
+        })
       })
       return ret
     }
