@@ -24,7 +24,6 @@ export const getData = (el, name, val) => {
 let elementStyle = document.createElement('div').style
 
 let vendor = (() => {
-  console.log('run vendor')
   const translateName = {
     webkit: 'webkitTransform',
     moz: 'mozTransform',
