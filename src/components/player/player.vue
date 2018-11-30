@@ -15,7 +15,7 @@
         <div class="middle">
           <div class="middle-l">
             <div class="cd-wrapper" ref="cdWrapper">
-              <div class="cd">
+              <div class="cd" :class="cdCls">
                 <img class="image" :src="currentSong.image">
               </div>
             </div>
@@ -36,7 +36,7 @@
     <transition name="mini">
       <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="icon">
-          <img width="40" height="40" :src="currentSong.image">
+          <img width="40" height="40" :class="cdCls" :src="currentSong.image">
         </div>
         <div class="text">
           <div class="name" v-html="currentSong.name"></div>
@@ -68,8 +68,11 @@ export default {
     playIcon() {
       return this.playing ? 'icon-pause' : 'icon-play'
     },
-    miniIcon () {
+    miniIcon() {
       return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+    },
+    cdCls() {
+      return this.playing ? 'play' : 'play pause'
     }
   },
   watch: {
@@ -220,6 +223,10 @@ export default {
             box-sizing: border-box
             border: 10px solid rgba(255, 255, 255, 0.1)
             border-radius: 50%
+            &.play
+              animation: rotate 20s linear infinite
+            &.pause
+              animation-play-state: paused
             .image
               position: absolute
               left: 0
@@ -342,6 +349,10 @@ export default {
       padding: 0 10px 0 20px
       img
         border-radius: 50%
+        &.play
+          animation: rotate 10s linear infinite
+        &.pause
+          animation-play-state: paused
     .text
       display: flex
       flex-direction: column
@@ -374,4 +385,10 @@ export default {
       transition: all .4s
     &.mini-enter, &.mini-leave-to
       opacity: 0
+
+@keyframes rotate
+  0%
+    transform: rotate(0)
+  100%
+    transform: rotate(360deg)
 </style>
