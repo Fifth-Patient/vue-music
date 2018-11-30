@@ -25,9 +25,9 @@
         <div class="bottom">
           <div class="operators">
             <div class="icon i-left"><i class="icon-random"></i></div>
-            <div class="icon i-left"><i class="icon-prev"></i></div>
-            <div class="icon i-center"><i :class="playIcon" @click="togglePlaying"></i></div>
-            <div class="icon i-right"><i class="icon-next"></i></div>
+            <div class="icon i-left" :class="disableCls"><i class="icon-prev" @click="prev"></i></div>
+            <div class="icon i-center" :class="disableCls"><i :class="playIcon"  @click="togglePlaying"></i></div>
+            <div class="icon i-right" :class="disableCls"><i class="icon-next" @click="next"></i></div>
             <div class="icon i-right"><i class="icon-not-favorite"></i></div>
           </div>
         </div>
@@ -50,7 +50,7 @@
         </div>
       </div>
     </transition>
-    <audio :src="currentSong.url" ref="audio"></audio>
+    <audio :src="currentSong.url" @canplay="ready" @error="error" ref="audio"></audio>
   </div>
 </template>
 
@@ -64,7 +64,7 @@ const transition = prefixStyle('transition')
 
 export default {
   computed: {
-    ...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing']),
+    ...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing', 'currentIndex']),
     playIcon() {
       return this.playing ? 'icon-pause' : 'icon-play'
     },
@@ -73,6 +73,9 @@ export default {
     },
     cdCls() {
       return this.playing ? 'play' : 'play pause'
+    },
+    disableCls() {
+      return this.songReady ? '' : 'disable'
     }
   },
   watch: {
@@ -88,10 +91,16 @@ export default {
       })
     }
   },
+  data() {
+    return {
+      songReady: false
+    }
+  },
   methods: {
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
-      setPlayingState: 'SET_PLAYING_STATE'
+      setPlayingState: 'SET_PLAYING_STATE',
+      setCurrentIndex: 'SET_CURRENT_INDEX'
     }),
     back() {
       this.setFullScreen(false)
@@ -143,6 +152,40 @@ export default {
     },
     togglePlaying() {
       this.setPlayingState(!this.playing)
+    },
+    prev() {
+      if (!this.songReady) {
+        return
+      }
+      let index = this.currentIndex - 1
+      if (index === -1) {
+        index = this.playList.length - 1
+      }
+      this.setCurrentIndex(index)
+      if (!this.playing) {
+        this.togglePlaying()
+      }
+      this.songReady = false
+    },
+    next() {
+      if (!this.songReady) {
+        return
+      }
+      let index = this.currentIndex + 1
+      if (index === this.playList.length) {
+        index = 0
+      }
+      this.setCurrentIndex(index)
+      if (!this.playing) {
+        this.togglePlaying()
+      }
+      this.songReady = false
+    },
+    ready() {
+      this.songReady = true
+    },
+    error() {
+      this.songReady = true
     }
   }
 }
