@@ -26,7 +26,7 @@
           <div class="operators">
             <div class="icon i-left"><i class="icon-random"></i></div>
             <div class="icon i-left"><i class="icon-prev"></i></div>
-            <div class="icon i-center"><i class="icon-play" @click="togglePlaying"></i></div>
+            <div class="icon i-center"><i :class="playIcon" @click="togglePlaying"></i></div>
             <div class="icon i-right"><i class="icon-next"></i></div>
             <div class="icon i-right"><i class="icon-not-favorite"></i></div>
           </div>
@@ -43,7 +43,7 @@
           <div class="desc" v-html="currentSong.singer"></div>
         </div>
         <div class="control">
-          <i class="icon-play-mini" @click.stop="togglePlaying"></i>
+          <i :class="miniIcon" @click.stop="togglePlaying"></i>
         </div>
         <div class="control">
           <div class="icon-playlist"></div>
@@ -64,7 +64,13 @@ const transition = prefixStyle('transition')
 
 export default {
   computed: {
-    ...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing'])
+    ...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing']),
+    playIcon() {
+      return this.playing ? 'icon-pause' : 'icon-play'
+    },
+    miniIcon () {
+      return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+    }
   },
   watch: {
     currentSong() {
