@@ -26,7 +26,7 @@
           <div class="operators">
             <div class="icon i-left"><i class="icon-random"></i></div>
             <div class="icon i-left"><i class="icon-prev"></i></div>
-            <div class="icon i-center"><i class="icon-play"></i></div>
+            <div class="icon i-center"><i class="icon-play" @click="togglePlaying"></i></div>
             <div class="icon i-right"><i class="icon-next"></i></div>
             <div class="icon i-right"><i class="icon-not-favorite"></i></div>
           </div>
@@ -43,10 +43,14 @@
           <div class="desc" v-html="currentSong.singer"></div>
         </div>
         <div class="control">
+          <i class="icon-play-mini" @click.stop="togglePlaying"></i>
+        </div>
+        <div class="control">
           <div class="icon-playlist"></div>
         </div>
       </div>
     </transition>
+    <audio :src="currentSong.url" ref="audio"></audio>
   </div>
 </template>
 
@@ -60,11 +64,25 @@ const transition = prefixStyle('transition')
 
 export default {
   computed: {
-    ...mapGetters(['fullScreen', 'playList', 'currentSong'])
+    ...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing'])
+  },
+  watch: {
+    currentSong() {
+      this.$nextTick(() => {
+        this.$refs.audio.play()
+      })
+    },
+    playing(newplaying) {
+      const audio = this.$refs.audio
+      this.$nextTick(() => {
+        newplaying ? audio.play() : audio.pause()
+      })
+    }
   },
   methods: {
     ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN'
+      setFullScreen: 'SET_FULL_SCREEN',
+      setPlayingState: 'SET_PLAYING_STATE'
     }),
     back() {
       this.setFullScreen(false)
@@ -113,6 +131,9 @@ export default {
     afterLeave() {
       this.$refs.cdWrapper.style[transition] = ''
       this.$refs.cdWrapper.style[transform] = ''
+    },
+    togglePlaying() {
+      this.setPlayingState(!this.playing)
     }
   }
 }
