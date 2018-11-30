@@ -44,15 +44,11 @@ const MUSICPLAYURL = [
   'http://dl.stream.qqmusic.qq.com/C400001S0qKq0Vrdw4.m4a?guid=2011413128&vkey=787A06B316162F2078B17D679D99FE1222767B5A7F979F65A52BB079957D7C9289D49234A2E84807325D22CBF65649072E38430666DDD66D&uin=0&fromtag=66'
 ]
 
-let usefilerUrlCurrent = -1
+let count = 0
 
 const filerUrl = () => {
-  if (usefilerUrlCurrent < MUSICPLAYURL.length - 1) {
-    usefilerUrlCurrent++
-    return MUSICPLAYURL[usefilerUrlCurrent]
-  }
-  const minIndex = 0
-  const maxIndex = MUSICPLAYURL.length - 1
-  const randomIndex = Math.floor(Math.random() * (maxIndex - minIndex + 1) + minIndex)
-  return MUSICPLAYURL[randomIndex]
+  const arrLength = MUSICPLAYURL.length
+  const resultUrl = MUSICPLAYURL[count % arrLength]
+  count++
+  return resultUrl
 }
