@@ -23,6 +23,8 @@
           <div class="middle-r"></div>
         </div>
         <div class="bottom">
+          {{format(currentTime)}}
+          {{format(currentSong.duration)}}
           <div class="operators">
             <div class="icon i-left"><i class="icon-random"></i></div>
             <div class="icon i-left" :class="disableCls"><i class="icon-prev" @click="prev"></i></div>
@@ -50,7 +52,7 @@
         </div>
       </div>
     </transition>
-    <audio :src="currentSong.url" @canplay="ready" @error="error" ref="audio"></audio>
+    <audio :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" ref="audio"></audio>
   </div>
 </template>
 
@@ -93,7 +95,8 @@ export default {
   },
   data() {
     return {
-      songReady: false
+      songReady: false,
+      currentTime: 0
     }
   },
   methods: {
@@ -186,6 +189,23 @@ export default {
     },
     error() {
       this.songReady = true
+    },
+    updateTime(e) {
+      this.currentTime = e.target.currentTime
+    },
+    format(interval) {
+      interval = interval | 0
+      const minute = this._pad(interval / 60 | 0)
+      const second = this._pad(interval % 60)
+      return `${minute}:${second}`
+    },
+    _pad(num, n = 2) {
+      let len = num.toString().length
+      while (len < n) {
+        num = '0' + num
+        len++
+      }
+      return num
     }
   }
 }
