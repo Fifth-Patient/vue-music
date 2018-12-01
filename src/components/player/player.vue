@@ -23,8 +23,13 @@
           <div class="middle-r"></div>
         </div>
         <div class="bottom">
-          {{format(currentTime)}}
-          {{format(currentSong.duration)}}
+          <div class="progress-wrapper">
+            <span class="time time-l">{{format(currentTime)}}</span>
+            <div class="progress-bar-wrapper">
+              <progress-bar></progress-bar>
+            </div>
+            <span class="time time-r">{{format(currentSong.duration)}}</span>
+          </div>
           <div class="operators">
             <div class="icon i-left"><i class="icon-random"></i></div>
             <div class="icon i-left" :class="disableCls"><i class="icon-prev" @click="prev"></i></div>
@@ -60,6 +65,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 import animations from 'create-keyframe-animation'
 import { prefixStyle } from 'common/js/dom'
+import progressBar from 'base/progress-bar/progress-bar'
 
 const transform = prefixStyle('transform')
 const transition = prefixStyle('transition')
@@ -207,6 +213,9 @@ export default {
       }
       return num
     }
+  },
+  components: {
+    progressBar
   }
 }
 </script>
