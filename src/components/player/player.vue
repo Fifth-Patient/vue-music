@@ -59,7 +59,7 @@
         </div>
       </div>
     </transition>
-    <audio :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" ref="audio"></audio>
+    <audio :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end" ref="audio"></audio>
   </div>
 </template>
 
@@ -210,6 +210,17 @@ export default {
     },
     updateTime(e) {
       this.currentTime = e.target.currentTime
+    },
+    end() {
+      if (this.mode === playMode.loop) {
+        this.loop()
+      } else {
+        this.next()
+      }
+    },
+    loop() {
+      this.$refs.audio.currentTime = 0
+      this.$refs.audio.play()
     },
     format(interval) {
       interval = interval | 0
