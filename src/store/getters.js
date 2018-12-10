@@ -10,6 +10,6 @@ export const sequenceList = state => state.sequenceList
 
 export const currentIndex = state => state.currentIndex
 
-export const playMode = state => state.playMode
+export const mode = state => state.mode
 
 export const currentSong = state => state.playList[state.currentIndex] || {}
