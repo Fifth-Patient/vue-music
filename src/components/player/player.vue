@@ -31,7 +31,7 @@
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon i-left"><i class="icon-random"></i></div>
+            <div class="icon i-left"><i :class="iconMode" @click="changeMode"></i></div>
             <div class="icon i-left" :class="disableCls"><i class="icon-prev" @click="prev"></i></div>
             <div class="icon i-center" :class="disableCls"><i :class="playIcon"  @click="togglePlaying"></i></div>
             <div class="icon i-right" :class="disableCls"><i class="icon-next" @click="next"></i></div>
@@ -67,6 +67,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 import animations from 'create-keyframe-animation'
 import { prefixStyle } from 'common/js/dom'
+import { playMode } from 'common/js/config'
 import progressBar from 'base/progress-bar/progress-bar'
 import progressCircle from 'base/progress-circle/progress-circle'
 
@@ -75,7 +76,7 @@ const transition = prefixStyle('transition')
 
 export default {
   computed: {
-    ...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing', 'currentIndex']),
+    ...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing', 'currentIndex', 'mode']),
     playIcon() {
       return this.playing ? 'icon-pause' : 'icon-play'
     },
@@ -90,6 +91,9 @@ export default {
     },
     percent() {
       return this.currentTime / this.currentSong.duration
+    },
+    iconMode() {
+      return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
     }
   },
   watch: {
@@ -116,7 +120,8 @@ export default {
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
       setPlayingState: 'SET_PLAYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX'
+      setCurrentIndex: 'SET_CURRENT_INDEX',
+      setPlayMode: 'SET_PLAY_MODE'
     }),
     back() {
       this.setFullScreen(false)
@@ -222,6 +227,10 @@ export default {
     },
     onPercentChange(percent) {
       this.$refs.audio.currentTime = this.currentSong.duration * percent
+    },
+    changeMode() {
+      const mode = (this.mode + 1) % 3
+      this.setPlayMode(mode)
     }
   },
   components: {
