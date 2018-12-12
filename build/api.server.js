@@ -24,6 +24,33 @@ routers.get('/getDiscList', (req, res) => {
 
 })
 
+// 代理 get: /lyric 请求
+routers.get('/getLyric', (req, res) => {
+  const url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
+
+  axios.get(url, {
+    headers: {
+      referer: 'https://c.y.qq.com/',
+      host: 'c.y.qq.com'
+    },
+    params: req.query
+  }).then(response => {
+    let ret = response.data
+    if (typeof ret === 'string') {
+      let reg = /^\w+\(({[^()]+})\)$/
+      let methes = ret.match(reg)
+      if (methes) {
+        ret = JSON.parse(methes[1])
+        console.log(ret)
+      }
+    }
+    res.json(ret)
+  }).catch(e => {
+    console.error(e)
+  })
+
+})
+
 app.use('/api', routers)
 
 // 导出对象
