@@ -70,6 +70,7 @@ import { prefixStyle } from 'common/js/dom'
 import { playMode } from 'common/js/config'
 import progressBar from 'base/progress-bar/progress-bar'
 import progressCircle from 'base/progress-circle/progress-circle'
+import Lyric from 'lyric-parser'
 
 const transform = prefixStyle('transform')
 const transition = prefixStyle('transition')
@@ -100,7 +101,7 @@ export default {
     currentSong() {
       this.$nextTick(() => {
         this.$refs.audio.play()
-        this.currentSong.getLyric()
+        this.getLyric()
       })
     },
     playing(newplaying) {
@@ -114,7 +115,8 @@ export default {
     return {
       songReady: false,
       currentTime: 0,
-      radius: 32
+      radius: 32,
+      currentLyric: null
     }
   },
   methods: {
@@ -243,6 +245,12 @@ export default {
     changeMode() {
       const mode = (this.mode + 1) % 3
       this.setPlayMode(mode)
+    },
+    getLyric() {
+      this.currentSong.getLyric().then((lyric) => {
+        this.currentLyric = new Lyric(lyric)
+        console.log(this.currentLyric)
+      })
     }
   },
   components: {
