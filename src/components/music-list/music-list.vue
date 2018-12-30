@@ -31,11 +31,14 @@ import songList from 'base/song-list/song-list'
 import loading from 'base/loading/loading'
 import { prefixStyle } from 'common/js/dom'
 import { mapActions } from 'vuex'
+import { playListMixin } from 'common/js/mixin'
+
 const RESERVED_HEIGHT = 40
 const transform = prefixStyle('transform')
 const backdrop = prefixStyle('backdrop')
 
 export default {
+  mixins: [playListMixin],
   props: {
     title: {
       type: String,
@@ -61,6 +64,11 @@ export default {
     }
   },
   methods: {
+    handlePlayList(playList) {
+      const bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.list.$el.style.bottom = bottom
+      this.$refs.list.refresh()
+    },
     scroll(pos) {
       this.scrollY = pos.y
     },

@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend">
+  <div class="recommend" ref="recommend">
     <scroll class="recommend-content" :data="discLikst" ref="scroll">
       <div>
         <div v-if="recommends.length" class="slider-wrapper">
@@ -39,8 +39,10 @@ import Scroll from 'base/scroll/scroll.vue'
 import Loading from 'base/loading/loading.vue'
 import { getRecommend, getDiscLikst } from 'api/recommend'
 import { ERR_OK } from 'api/config'
+import { playListMixin } from 'common/js/mixin'
 
 export default {
+  mixins: [playListMixin],
   created() {
     this._getRecommend()
     this._getDiscLikst()
@@ -72,7 +74,12 @@ export default {
         this.$refs.scroll.refresh()
         this.checkLoaded = true
       }
-    }
+    },
+    handlePlayList(playList) {
+      const bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.recommend.style.bottom = bottom
+      this.$refs.scroll.refresh()
+    },
   },
   components: {
     Slider,
