@@ -8,7 +8,6 @@
 import { mapGetters } from 'vuex'
 import { ERR_OK } from 'api/config'
 import { getSingerDetail } from 'api/singer'
-import { getSongVkey } from 'api/song'
 import { createSong } from 'common/js/song'
 import musicList from 'components/music-list/music-list'
 
@@ -21,7 +20,6 @@ export default {
       songs: []
     }
   },
-
   computed: {
     ...mapGetters(['singer']),
     title() {
@@ -46,12 +44,9 @@ export default {
       let ret = []
       list.forEach((item, index) => {
         let { musicData } = item
-        getSongVkey(musicData.songmid).then(res => {
-          let vkey = res.data.items[0].vkey
-          if (musicData.songid && musicData.albumid) {
-            ret.push(createSong(musicData, vkey))
-          }
-        })
+        if (musicData.songid && musicData.albumid) {
+          ret.push(createSong(musicData))
+        }
       })
       return ret
     }
@@ -64,7 +59,6 @@ export default {
 
 <style lang="stylus" scoped>
 @import '~common/stylus/variable'
-
 .slide-enter-active, .slide-leave-active
   transition: all 0.3s
 .slide-enter, .slide-leave-to
