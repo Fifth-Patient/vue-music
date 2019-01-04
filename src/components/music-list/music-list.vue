@@ -73,7 +73,7 @@ export default {
       this.scrollY = pos.y
     },
     back() {
-      this.$router.push('/singer')
+      this.$router.back()
     },
     ...mapActions(['selectPlay', 'randomPlay']),
     selectItem(item, index) {
