@@ -1,12 +1,16 @@
 <template>
   <div>
-    search
+    <search-box></search-box>
   </div>
 </template>
 
 <script>
+import SearchBox from 'components/search-box/search-box'
+
 export default {
-  name: ''
+  components: {
+    SearchBox
+  }
 }
 </script>
 
