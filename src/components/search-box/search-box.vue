@@ -1,12 +1,14 @@
 <template>
   <div class="search-box">
     <i class="icon-search"></i>
-    <input class="box" v-model="query" :placeholder="placeholder">
+    <input class="box" ref="query" v-model="query" :placeholder="placeholder">
     <i class="icon-dismiss" @click="clear" v-show="query"></i>
   </div>
 </template>
 
 <script>
+import { debounce } from 'common/js/until'
+
 export default {
   props: {
     placeholder: {
@@ -25,12 +27,15 @@ export default {
     },
     setQuery(query) {
       this.query = query
+    },
+    blur() {
+      this.$refs.query.blur()
     }
   },
   created() {
-    this.$watch('query', newQuery => {
+    this.$watch('query', debounce(newQuery => {
       this.$emit('query', newQuery)
-    })
+    }, 200))
   }
 }
 </script>
