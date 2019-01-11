@@ -1,19 +1,23 @@
 <template>
-  <div class="suggest">
+  <scroll class="suggest" ref="suggest" :data="result" :pullup="pullup" @scrollToEnd="searchMore">
     <ul class="suggest-list">
       <li class="suggest-item" v-for="item in result" :key="item.index">
         <div class="icon"><i :class="getIconCls(item)"></i></div>
         <div class="name"><p class="text" v-html="getDisplayName(item)"></p></div>
       </li>
+      <loading v-show="hasMore" title=""></loading>
     </ul>
-  </div>
+  </scroll>
 </template>
 
 <script>
 import { search } from 'api/search'
 import { ERR_OK } from 'api/config'
-import { filterSinger } from 'common/js/song'
+import { createSong } from 'common/js/song'
+import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
 const TYPE_SINGER = 'singer'
+const perpage = 20
 
 export default {
   props: {
@@ -29,26 +33,57 @@ export default {
   data() {
     return {
       page: 1,
-      result: []
+      result: [],
+      pullup: true,
+      hasMore: true
     }
   },
   methods: {
     _genResult(data) {
       let ret = []
-      console.log(data)
       if (data.zhida && data.zhida.singerid) {
         ret.push({...data.zhida, ...{type: TYPE_SINGER}})
       }
       if (data.song) {
-        ret = ret.concat(data.song.list)
+        ret = ret.concat(this._normalizeSongs(data.song.list))
       }
-      console.log(ret)
       return ret
     },
+    _normalizeSongs(list) {
+      let ret = []
+      list.forEach(musicData => {
+        if (musicData.songid && musicData.albumid) {
+          ret.push(createSong(musicData))
+        }
+      })
+      return ret
+    },
+    _checkMore(data) {
+      const song = data.song
+      if (!song.list.length || (song.curnum + song.curpage * perpage) >= song.totalum) {
+        this.hasMore = false
+      }
+    },
     serach() {
-      search(this.query, this.page, this.showSingger, this.perpage).then(res => {
+      this.page = 1
+      this.hasMore = true
+      this.$refs.suggest.scrollTo(0, 0)
+      search(this.query, this.page, this.showSingger, perpage).then(res => {
         if (res.code === ERR_OK) {
           this.result = this._genResult(res.data)
+          this._checkMore(res.data)
+        }
+      })
+    },
+    searchMore() {
+      if (!this.hasMore) {
+        return
+      }
+      this.page++
+      search(this.query, this.page, this.showSingger, perpage).then(res => {
+        if (res.code === ERR_OK) {
+          this.result = this.result.concat(this._genResult(res.data))
+          this._checkMore(res.data)
         }
       })
     },
@@ -63,7 +98,7 @@ export default {
       if (item.type === TYPE_SINGER) {
         return item.singername
       } else {
-        return `${item.songname}-${filterSinger(item.singer)}`
+        return `${item.name} - ${item.singer}`
       }
     }
   },
@@ -71,6 +106,10 @@ export default {
     query() {
       this.serach()
     }
+  },
+  components: {
+    Scroll,
+    Loading
   }
 }
 </script>

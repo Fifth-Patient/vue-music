@@ -46,7 +46,7 @@ export const createSong = (musicData, vkey) => {
   })
 }
 
-export const filterSinger = singer => {
+const filterSinger = singer => {
   let ret = []
   if (!singer) {
     return ''
