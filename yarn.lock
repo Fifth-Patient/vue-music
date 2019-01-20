@@ -3320,6 +3320,11 @@ globby@^7.1.1:
     pify "^3.0.0"
     slash "^1.0.0"
 
+good-storage@^1.1.0:
+  version "1.1.0"
+  resolved "http://registry.npm.taobao.org/good-storage/download/good-storage-1.1.0.tgz#69efaf686e772876ca7f734c3e47872a064ad7f7"
+  integrity sha1-ae+vaG53KHbKf3NMPkeHKgZK1/c=
+
 got@^6.7.1:
   version "6.7.1"
   resolved "http://registry.npm.taobao.org/got/download/got-6.7.1.tgz#240cd05785a9a18e561dc1b44b41c763ef1e8db0"

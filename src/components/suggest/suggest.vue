@@ -3,7 +3,7 @@
     <ul class="suggest-list">
       <li class="suggest-item" @click="selectItem(item)" v-for="item in result" :key="item.index">
         <div class="icon"><i :class="getIconCls(item)"></i></div>
-        <div class="name"><p class="text" v-html="getDisplayName(item)"></p></div>
+        <div class="name"><p class="text" v-html="getDisplayName(item)">11</p></div>
       </li>
       <loading v-show="hasMore" title=""></loading>
     </ul>
