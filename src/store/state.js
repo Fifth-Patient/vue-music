@@ -9,7 +9,8 @@ const state = {
   currentIndex: -1,
   disc: {},
   topList: {},
-  mode: playMode.sequence
+  mode: playMode.sequence,
+  searchHistory: []
 }
 
 export default state
