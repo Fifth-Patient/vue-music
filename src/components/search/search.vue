@@ -129,7 +129,7 @@ export default {
     margin: 20px
   .shortcut-wrapper
     position: fixed
-    top: 178px
+    top: 140px
     bottom: 0
     width: 100%
     .shortcut
@@ -168,6 +168,6 @@ export default {
   .search-result
     position: fixed
     width: 100%
-    top: 178px
+    top: 140px
     bottom: 0
 </style>
