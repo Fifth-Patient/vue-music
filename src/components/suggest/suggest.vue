@@ -130,6 +130,9 @@ export default {
     ...mapMutations({
       setSinger: 'SET_SINGER'
     }),
+    refresh() {
+      this.$refs.suggest.refresh()
+    },
     ...mapActions([
       'insertSong'
     ])
