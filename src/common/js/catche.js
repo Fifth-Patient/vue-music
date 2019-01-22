@@ -25,3 +25,7 @@ export const saveSeach = query => {
   storage.set(SEARCH_KEY, searches)
   return searches
 }
+
+export const loadSearch = () => {
+  return storage.get(SEARCH_KEY, [])
+}
