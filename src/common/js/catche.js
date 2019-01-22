@@ -17,6 +17,13 @@ const insertArray = (arr, val, compare, maxLen) => {
   }
 }
 
+const deleteFromArray = (arr, val, compare) => {
+  const index = arr.findIndex(compare)
+  if (index >= 0) {
+    arr.splice(index, 1)
+  }
+}
+
 export const saveSeach = query => {
   let searches = storage.get(SEARCH_KEY, [])
   insertArray(searches, query, item => {
@@ -28,4 +35,18 @@ export const saveSeach = query => {
 
 export const loadSearch = () => {
   return storage.get(SEARCH_KEY, [])
+}
+
+export const deleteSearch = query => {
+  let searches = storage.get(SEARCH_KEY, [])
+  deleteFromArray(searches, query, item => {
+    return item === query
+  })
+  storage.set(SEARCH_KEY, searches)
+  return searches
+}
+
+export const clearSearch = () => {
+  storage.remove(SEARCH_KEY)
+  return []
 }
