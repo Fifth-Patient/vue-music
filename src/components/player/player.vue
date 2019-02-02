@@ -67,11 +67,12 @@
             <i class="icon-mini" :class="miniIcon" @click.stop="togglePlaying"></i>
           </progress-circle>
         </div>
-        <div class="control">
+        <div class="control" @click="showPlayList">
           <div class="icon-playlist"></div>
         </div>
       </div>
     </transition>
+    <play-list ref="playlist"></play-list>
     <audio :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end" ref="audio"></audio>
   </div>
 </template>
@@ -85,6 +86,7 @@ import progressBar from 'base/progress-bar/progress-bar'
 import progressCircle from 'base/progress-circle/progress-circle'
 import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll/scroll'
+import PlayList from 'components/playlist/playlist'
 
 const transform = prefixStyle('transform')
 const transition = prefixStyle('transition')
@@ -370,12 +372,16 @@ export default {
       this.$refs.lyricList.$el.style[transitionDuration] = `${time}ms`
       this.$refs.middleL.style.opacity = opacity
       this.$refs.middleL.style[transitionDuration] = `${time}ms`
+    },
+    showPlayList() {
+      this.$refs.playlist.show()
     }
   },
   components: {
     progressBar,
     progressCircle,
-    Scroll
+    Scroll,
+    PlayList
   }
 }
 </script>
