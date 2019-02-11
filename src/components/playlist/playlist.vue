@@ -6,20 +6,21 @@
         <div class="list-header">
           <h1 class="title">
             <i class="icon"></i>
-            <span class="text">text</span>
+            <span class="text"></span>
             <span class="clear"><i class="icon-clear"></i></span>
           </h1>
         </div>
 
-        <div class="list-content">
+        <srcoll class="list-content" ref="listContent">
           <ul>
-            <li class="item">
-              <i class="current"></i>
-              <span class="text">text</span>
-              <span class="like"><i>like</i></span>
+            <li class="item" v-for="(item, index) in sequenceList" :key="index" @click="selectItem(item, index)">
+              <i class="current" :class="getCurrentIcon(item)"></i>
+              <span class="text">{{item.name}}</span>
+              <span class="like"><i class="icon-favorite"></i></span>
+              <span class="delete"><i class="icon-delete"></i></span>
             </li>
           </ul>
-        </div>
+        </srcoll>
 
         <div class="list-operate">
           <div class="add">
@@ -37,19 +38,50 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
+import { playMode } from 'common/js/config'
+import Srcoll from 'base/scroll/scroll'
+
 export default {
   data() {
     return {
       showFlag: false
     }
   },
+  computed: {
+    ...mapGetters([
+      'sequenceList',
+      'currentSong'
+    ])
+  },
   methods: {
+    ...mapMutations({
+      'setCurrentIndex': 'SET_CURRENT_INDEX'
+    }),
     show() {
       this.showFlag = true
+      setTimeout(() => {
+        this.$refs.listContent.refresh()
+      }, 20)
     },
     hide() {
       this.showFlag = false
+    },
+    getCurrentIcon(item) {
+      if (this.currentSong.id === item.id) {
+        return 'icon-play'
+      }
+      return ''
+    },
+    selectItem(item, index) {
+      if (this.mode === playMode.random) {
+
+      }
+      this.setCurrentIndex(index)
     }
+  },
+  components: {
+    Srcoll
   }
 }
 </script>
