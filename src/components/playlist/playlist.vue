@@ -11,16 +11,16 @@
           </h1>
         </div>
 
-        <srcoll class="list-content" ref="listContent">
-          <ul>
-            <li class="item" v-for="(item, index) in sequenceList" :key="index" @click="selectItem(item, index)">
+        <Scroll class="list-content" ref="listContent">
+          <transition-group name="list" tag="ul">
+            <li ref="listItem" class="item" v-for="(item, index) in sequenceList" :key="item.id" @click="selectItem(item, index)">
               <i class="current" :class="getCurrentIcon(item)"></i>
               <span class="text">{{item.name}}</span>
               <span class="like"><i class="icon-favorite"></i></span>
-              <span class="delete"><i class="icon-delete"></i></span>
+              <span class="delete" @click.stop="deleteOne(item)"><i class="icon-delete"></i></span>
             </li>
-          </ul>
-        </srcoll>
+          </transition-group>
+        </Scroll>
 
         <div class="list-operate">
           <div class="add">
@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { playMode } from 'common/js/config'
-import Srcoll from 'base/scroll/scroll'
+import Scroll from 'base/scroll/scroll'
 
 export default {
   data() {
@@ -51,17 +51,24 @@ export default {
   computed: {
     ...mapGetters([
       'sequenceList',
-      'currentSong'
+      'currentSong',
+      'playList',
+      'mode'
     ])
   },
   methods: {
     ...mapMutations({
-      'setCurrentIndex': 'SET_CURRENT_INDEX'
+      'setCurrentIndex': 'SET_CURRENT_INDEX',
+      'setPlayingState': 'SET_PLAYING_STATE'
     }),
+    ...mapActions([
+      'deleteSong'
+    ]),
     show() {
       this.showFlag = true
       setTimeout(() => {
         this.$refs.listContent.refresh()
+        this.scrollToCurrent(this.currentSong)
       }, 20)
     },
     hide() {
@@ -74,14 +81,40 @@ export default {
       return ''
     },
     selectItem(item, index) {
+      console.log(this)
       if (this.mode === playMode.random) {
-
+        index = this.playList.findIndex(song => {
+          return song.id === item.id
+        })
       }
       this.setCurrentIndex(index)
+      this.setPlayingState(true)
+    },
+    scrollToCurrent(current) {
+      const index = this.sequenceList.findIndex(song => {
+        return current.id === song.id
+      })
+      this.$refs.listContent.scrollToElement(this.$refs.listItem[index], 300)
+    },
+    deleteOne(item) {
+      setTimeout(() => {
+        this.deleteSong(item)
+      }, 3000)
+      if (!this.playList) {
+        this.hide()
+      }
+    }
+  },
+  watch: {
+    currentSong(newSong, oldSong) {
+      if (!this.showFlag || newSong.id === oldSong.id) {
+        return
+      }
+      this.scrollToCurrent(newSong)
     }
   },
   components: {
-    Srcoll
+    Scroll
   }
 }
 </script>
@@ -139,11 +172,10 @@ export default {
         align-items: center
         height: 40px
         padding: 0 30px 0 20px
-        overflow: hidden
         &.list-enter-active, &.list-leave-active
-          transition: all 0.1s
+          transition: all 0.5s linear
         &.list-enter, &.list-leave-to
-          height: 0
+          height: 10px
         .current
           flex: 0 0 20px
           width: 20px
