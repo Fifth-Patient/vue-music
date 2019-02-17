@@ -7,7 +7,7 @@
           <h1 class="title">
             <i class="icon"></i>
             <span class="text"></span>
-            <span class="clear"><i class="icon-clear"></i></span>
+            <span class="clear" @click="showConfirm"><i class="icon-clear"></i></span>
           </h1>
         </div>
 
@@ -33,6 +33,7 @@
           <span>关闭</span>
         </div>
       </div>
+      <confirm ref="confirm" text="是否清除列表" confrimBtnText="清空" @confirm="confirmClear"></confirm>
     </div>
   </transition>
 </template>
@@ -41,7 +42,7 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { playMode } from 'common/js/config'
 import Scroll from 'base/scroll/scroll'
-
+import Confirm from 'base/confirm/confirm'
 export default {
   data() {
     return {
@@ -62,7 +63,8 @@ export default {
       'setPlayingState': 'SET_PLAYING_STATE'
     }),
     ...mapActions([
-      'deleteSong'
+      'deleteSong',
+      'deleteSongList'
     ]),
     show() {
       this.showFlag = true
@@ -97,12 +99,17 @@ export default {
       this.$refs.listContent.scrollToElement(this.$refs.listItem[index], 300)
     },
     deleteOne(item) {
-      setTimeout(() => {
-        this.deleteSong(item)
-      }, 3000)
+      this.deleteSong(item)
       if (!this.playList) {
         this.hide()
       }
+    },
+    showConfirm() {
+      this.$refs.confirm.show()
+    },
+    confirmClear() {
+      this.deleteSongList()
+      this.hide()
     }
   },
   watch: {
@@ -114,7 +121,8 @@ export default {
     }
   },
   components: {
-    Scroll
+    Scroll,
+    Confirm
   }
 }
 </script>
@@ -173,9 +181,9 @@ export default {
         height: 40px
         padding: 0 30px 0 20px
         &.list-enter-active, &.list-leave-active
-          transition: all 0.5s linear
+          transition: all 0.1s
         &.list-enter, &.list-leave-to
-          height: 10px
+          height: 0
         .current
           flex: 0 0 20px
           width: 20px
