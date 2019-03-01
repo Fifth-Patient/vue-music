@@ -87,17 +87,23 @@ import progressCircle from 'base/progress-circle/progress-circle'
 import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll/scroll'
 import PlayList from 'components/playlist/playlist'
+import { playerMixin } from 'common/js/mixin'
 
 const transform = prefixStyle('transform')
 const transition = prefixStyle('transition')
 const transitionDuration = prefixStyle('transitionDuration')
 
 export default {
+  mixins: [ playerMixin ],
   created() {
     this.touch = {}
   },
   computed: {
-    ...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing', 'currentIndex', 'mode']),
+    ...mapGetters([
+      'fullScreen',
+      'playing',
+      'currentIndex'
+    ]),
     playIcon() {
       return this.playing ? 'icon-pause' : 'icon-play'
     },
@@ -112,9 +118,6 @@ export default {
     },
     percent() {
       return this.currentTime / this.currentSong.duration
-    },
-    iconMode() {
-      return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
     }
   },
   watch: {
@@ -153,10 +156,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN',
-      setPlayingState: 'SET_PLAYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayMode: 'SET_PLAY_MODE'
+      setFullScreen: 'SET_FULL_SCREEN'
     }),
     back() {
       this.setFullScreen(false)
@@ -215,6 +215,7 @@ export default {
         this.currentLyric.togglePlay()
       }
     },
+
     prev() {
       if (!this.songReady) {
         return
@@ -298,10 +299,6 @@ export default {
       if (this.currentLyric) {
         this.currentLyric.seek(currentTime * 1000)
       }
-    },
-    changeMode() {
-      const mode = (this.mode + 1) % 3
-      this.setPlayMode(mode)
     },
     getLyric() {
       this.currentSong.getLyric().then((lyric) => {

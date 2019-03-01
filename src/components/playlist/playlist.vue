@@ -5,7 +5,7 @@
 
         <div class="list-header">
           <h1 class="title">
-            <i class="icon"></i>
+            <i class="icon" :class="iconMode"></i>
             <span class="text"></span>
             <span class="clear" @click="showConfirm"><i class="icon-clear"></i></span>
           </h1>
@@ -39,29 +39,20 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import { playMode } from 'common/js/config'
 import Scroll from 'base/scroll/scroll'
 import Confirm from 'base/confirm/confirm'
+import { playerMixin } from 'common/js/mixin'
+
 export default {
+  mixins: [ playerMixin ],
   data() {
     return {
       showFlag: false
     }
   },
-  computed: {
-    ...mapGetters([
-      'sequenceList',
-      'currentSong',
-      'playList',
-      'mode'
-    ])
-  },
   methods: {
-    ...mapMutations({
-      'setCurrentIndex': 'SET_CURRENT_INDEX',
-      'setPlayingState': 'SET_PLAYING_STATE'
-    }),
     ...mapActions([
       'deleteSong',
       'deleteSongList'
