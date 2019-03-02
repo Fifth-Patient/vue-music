@@ -6,6 +6,7 @@
         <div class="close" @click="hide"><i class="icon-close"></i></div>
       </div>
       <div class="search-box-wrapper">
+        <search-box ref="serachBox" @query="onQueryChange" placeholder="搜索歌曲"></search-box>
       </div>
       <div class="shortcut"></div>
       <div class="search-result"></div>
@@ -14,10 +15,17 @@
 </template>
 
 <script>
+import SearchBox from 'components/search-box/search-box'
+import Suggest from 'components/suggest/suggest'
+import { searchMixin } from 'common/js/mixin'
+import Switches from 'base/switches/switches'
+
 export default {
+  mixins: [ searchMixin ],
   data() {
     return {
-      showFlag: false
+      showFlag: false,
+      showSinger: false
     }
   },
   methods: {
@@ -27,6 +35,11 @@ export default {
     hide() {
       this.showFlag = false
     }
+  },
+  components: {
+    SearchBox,
+    Suggest,
+    Switches
   }
 }
 </script>
