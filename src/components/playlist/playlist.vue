@@ -5,8 +5,8 @@
 
         <div class="list-header">
           <h1 class="title">
-            <i class="icon" :class="iconMode"></i>
-            <span class="text"></span>
+            <i class="icon" :class="iconMode" @click="changeMode"></i>
+            <span class="text">{{modeText}}</span>
             <span class="clear" @click="showConfirm"><i class="icon-clear"></i></span>
           </h1>
         </div>
@@ -52,6 +52,11 @@ export default {
       showFlag: false
     }
   },
+  computed: {
+    modeText() {
+      return this.mode === playMode.squence ? '顺序播放' : this.mode === playMode.random ? '随机播放' : '单曲循环'
+    }
+  },
   methods: {
     ...mapActions([
       'deleteSong',
@@ -74,7 +79,6 @@ export default {
       return ''
     },
     selectItem(item, index) {
-      console.log(this)
       if (this.mode === playMode.random) {
         index = this.playList.findIndex(song => {
           return song.id === item.id
