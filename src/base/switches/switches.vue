@@ -1,6 +1,6 @@
 <template>
   <ul class="switches">
-    <li class="switch-item" v-for="(item, index) in switches" :class="{'active': currentIndex === index }" :key="item.index">
+    <li class="switch-item" v-for="(item, index) in switches" :class="{'active': currentIndex === index }" :key="item.index" @click="switchItem(index)">
       <span>{{item.name}}</span>
     </li>
   </ul>
@@ -19,6 +19,11 @@ export default {
       type: Number,
       defalut: 0
     }
+  },
+  methods: {
+    switchItem(index) {
+      this.$emit('switch', index)
+    }
   }
 }
 </script>
@@ -27,7 +32,7 @@ export default {
 @import "~common/stylus/variable"
 @import "~common/stylus/mixin"
 
-.my-switches
+.switches
   display: flex
   align-items: center
   width: 240px

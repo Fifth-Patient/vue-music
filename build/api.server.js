@@ -41,7 +41,6 @@ routers.get('/getLyric', (req, res) => {
       let methes = ret.match(reg)
       if (methes) {
         ret = JSON.parse(methes[1])
-        console.log(ret)
       }
     }
     res.json(ret)
