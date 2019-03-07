@@ -6,14 +6,32 @@
         <div class="close" @click="hide"><i class="icon-close"></i></div>
       </div>
       <div class="search-box-wrapper">
-        <search-box ref="serachBox" @query="onQueryChange" placeholder="搜索歌曲"></search-box>
+        <search-box ref="searchBox" @query="onQueryChange" placeholder="搜索歌曲"></search-box>
       </div>
       <div class="shortcut">
         <switches :currentIndex="currentIndex" :switches="switches" @switch="switchItem"></switches>
+        <div class="list-wrapper">
+          <scroll class="list-scroll" ref="songList" v-if="currentIndex===0" :data="playHistory">
+            <div class="list-inner">
+              <song-list :songs="playHistory" @select="selectSong"></song-list>
+            </div>
+          </scroll>
+          <scroll class="list-scroll" ref="searchList" v-if="currentIndex===1" :data="searchHistory" :refreshDelay="refreshDelay">
+            <div class="list-inner">
+              <search-list @delete="deleteSearchHistory" @select="addQuery" :searches="searchHistory"></search-list>
+            </div>
+          </scroll>
+        </div>
       </div>
-      <!-- <div class="search-result">
-        search-result
-      </div> -->
+      <div class="search-result" v-show="query" ref="searchResult">
+        <suggest :query="query" @listScroll="blurInput" @select="saveSearch" ref="suggest"></suggest>
+      </div>
+      <top-tip ref="topTip">
+        <div class="tip-title">
+          <i class="icon-ok"></i>
+          <span class="text">1首歌曲已经添加到播放队列</span>
+        </div>
+      </top-tip>
     </div>
   </transition>
 </template>
@@ -23,6 +41,12 @@ import SearchBox from 'components/search-box/search-box'
 import Suggest from 'components/suggest/suggest'
 import { searchMixin } from 'common/js/mixin'
 import Switches from 'base/switches/switches'
+import Scroll from 'base/scroll/scroll'
+import { mapGetters, mapActions } from 'vuex'
+import SongList from 'base/song-list/song-list'
+import Song from 'common/js/song'
+import SearchList from 'base/search-list/search-list'
+import TopTip from 'base/top-tip/top-tip'
 
 export default {
   mixins: [ searchMixin ],
@@ -37,21 +61,51 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters(['playHistory', 'searchHistory'])
+  },
   methods: {
     show() {
       this.showFlag = true
+      setTimeout(() => {
+        if (this.currentIndex === 0) {
+          this.$refs.songList.refresh()
+        } else {
+          this.$refs.SearchList.refresh()
+        }
+      })
     },
     hide() {
       this.showFlag = false
     },
+    showTip() {
+      this.$refs.topTip.show()
+    },
     switchItem(index) {
       this.currentIndex = index
-    }
+    },
+    saveSearch() {
+      this.searchHistory(this.query)
+      this.showTip()
+    },
+    selectSong(song, index) {
+      if (index !== 0) {
+        this.insertSong(new Song(song))
+        this.showTip()
+      }
+    },
+    ...mapActions([
+      'insertSong'
+    ])
   },
   components: {
     SearchBox,
     Suggest,
-    Switches
+    Switches,
+    Scroll,
+    SongList,
+    SearchList,
+    TopTip
   }
 }
 </script>
@@ -106,6 +160,7 @@ export default {
     top: 124px
     bottom: 0
     width: 100%
+    background-color: $color-background
   .tip-title
     text-align: center
     padding: 18px 0
