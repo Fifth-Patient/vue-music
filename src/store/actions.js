@@ -25,6 +25,7 @@ export const selectPlay = ({ commit, state }, { list, index }) => {
 
 export const randomPlay = ({ commit }, { list }) => {
   let randomList = shuffle(list)
+  commit(types.SET_SEQUENCE_LIST, list)
   commit(types.SET_PLAY_MODE, playMode.random)
   commit(types.SET_PLAY_LIST, randomList)
   commit(types.SET_CURRENT_INDEX, 0)
