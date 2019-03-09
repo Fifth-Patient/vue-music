@@ -33,6 +33,9 @@ const mutations = {
   },
   [types.SET_PALY_HISTORY](state, history) {
     state.palyHistory = history
+  },
+  [types.SET_FAVORITE_LIST](state, list) {
+    state.favoriteList = list
   }
 }
 

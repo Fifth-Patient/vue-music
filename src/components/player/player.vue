@@ -48,7 +48,7 @@
             <div class="icon i-left" :class="disableCls"><i class="icon-prev" @click="prev"></i></div>
             <div class="icon i-center" :class="disableCls"><i :class="playIcon"  @click="togglePlaying"></i></div>
             <div class="icon i-right" :class="disableCls"><i class="icon-next" @click="next"></i></div>
-            <div class="icon i-right"><i class="icon-not-favorite"></i></div>
+            <div class="icon i-right"><i :class="getFavoriteIcon(currentSong)" @click="toggleFavorite(currentSong)"></i></div>
           </div>
         </div>
       </div>
@@ -218,7 +218,6 @@ export default {
         this.currentLyric.togglePlay()
       }
     },
-
     prev() {
       if (!this.songReady) {
         return
