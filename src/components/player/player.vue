@@ -125,22 +125,23 @@ export default {
       if (!newSong.id) {
         return
       }
+      if (newSong.id === oldSong.id) {
+        return
+      }
       if (this.currentLyric) {
         this.currentLyric.stop()
       }
-      this.$nextTick(() => {
-        if (newSong.id === oldSong.id) {
-          return
-        }
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$refs.audio.play()
         this.getLyric()
-      })
+      }, 1000)
     },
     playing(newplaying) {
       const audio = this.$refs.audio
-      setTimeout(() => {
+      this.$nextTick(() => {
         newplaying ? audio.play() : audio.pause()
-      }, 1000)
+      })
     }
   },
   data() {
@@ -224,6 +225,7 @@ export default {
       }
       if (this.playList.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex - 1
         if (index === -1) {
@@ -233,8 +235,8 @@ export default {
         if (!this.playing) {
           this.togglePlaying()
         }
-        this.songReady = false
       }
+      this.songReady = false
     },
     next() {
       if (!this.songReady) {
@@ -242,6 +244,7 @@ export default {
       }
       if (this.playList.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex + 1
         if (index === this.playList.length) {
@@ -251,8 +254,8 @@ export default {
         if (!this.playing) {
           this.togglePlaying()
         }
-        this.songReady = false
       }
+      this.songReady = false
     },
     ready() {
       this.songReady = true
@@ -305,6 +308,9 @@ export default {
     },
     getLyric() {
       this.currentSong.getLyric().then((lyric) => {
+        if (this.currentSong.lyric !== lyric) {
+          return
+        }
         this.currentLyric = new Lyric(lyric, this.handleLyric)
         if (this.playing) {
           this.currentLyric.play()
