@@ -57,6 +57,9 @@ const config = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 
+    // port
+    port: 9000,
+
     /**
      * Source Maps
      */
