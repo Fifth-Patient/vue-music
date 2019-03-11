@@ -5,8 +5,11 @@ import App from './App'
 import router from './router'
 import VueLazyload from 'vue-lazyload'
 import fastclick from 'fastclick'
-
 import 'common/stylus/index.styl'
+import vConsole from 'vconsole'
+
+/* eslint-disable */
+var vconsole = new vConsole()
 
 Vue.use(VueLazyload, {
   loading: require('common/image/default.png')
